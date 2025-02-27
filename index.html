@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Showcase</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Product Showcase</h1>
+            <p>Browse our collection of products</p>
+        </header>
+
+        <div class="filter-container">
+            <h3>Filter by Category:</h3>
+            <div id="category-filters" class="filter-buttons">
+                <!-- Categories will be added here dynamically -->
+            </div>
+        </div>
+
+        <div id="loading-message">Loading products...</div>
+        <div id="error-message"></div>
+        
+        <div id="products-container" class="products-grid">
+            <!-- Products will be added here dynamically -->
+        </div>
+    </div>
+
+    <!-- Product card template -->
+    <template id="product-template">
+        <div class="product-card">
+            <div class="product-image">
+                <img src="/placeholder.svg" alt="">
+            </div>
+            <div class="product-content">
+                <h2 class="product-title"></h2>
+                <div class="product-rating">
+                    <div class="stars"></div>
+                    <span class="rating-text"></span>
+                </div>
+                <p class="product-price"></p>
+                <div class="product-description">
+                    <p class="description-text collapsed"></p>
+                    <button class="read-more">Read More</button>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script src="/script.js"></script>
+</body>
+</html>
+
