@@ -1,66 +1,131 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const productsContainer = document.getElementById("products-container")
-    const categoryFilters = document.getElementById("category-filters")
-    let products = []
-    const categories = new Set()
-  
-    // Fetch products from our local API
-    fetch("/api/products")
-      .then((response) => response.json())
-      .then((data) => {
-        products = data.products
-        renderProducts(products)
-        renderCategoryFilters()
-      })
-      .catch((error) => console.error("Error:", error))
-  
-    function renderProducts(productsToRender) {
-      productsContainer.innerHTML = ""
-      productsToRender.forEach((product) => {
-        const productElement = createProductElement(product)
-        productsContainer.appendChild(productElement)
-        categories.add(product.category)
-      })
+// DOM Elements
+const productsGrid = document.getElementById("products-grid")
+const categoryFilters = document.getElementById("category-filters")
+const loadingMessage = document.getElementById("loading-message")
+const errorMessage = document.getElementById("error-message")
+
+// State
+let products = []
+let categories = []
+let activeCategory = "all"
+
+// Fetch products from the API
+async function fetchProducts() {
+  try {
+    const response = await fetch("https://dummyjson.com/products?limit=10")
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch products")
     }
-  
-    function createProductElement(product) {
-      const productCard = document.createElement("div")
-      productCard.className = "product-card"
-      productCard.innerHTML = `
-              <img src="${product.thumbnail}" alt="${product.title}" class="product-image">
-              <h2 class="product-title">${product.title}</h2>
-              <p class="product-price">$${product.price}</p>
-              <p class="product-rating">Rating: ${product.rating}/5</p>
-              <p class="product-description">${product.description}</p>
-          `
-      return productCard
-    }
-  
-    function renderCategoryFilters() {
-      categoryFilters.innerHTML = '<button class="filter-button active" data-category="all">All</button>'
-      categories.forEach((category) => {
-        const button = document.createElement("button")
-        button.className = "filter-button"
-        button.textContent = category
-        button.dataset.category = category
-        categoryFilters.appendChild(button)
+
+    const data = await response.json()
+    products = data.products
+
+    // Extract unique categories
+    const uniqueCategories = [...new Set(products.map((product) => product.category))]
+    categories = ["all", ...uniqueCategories]
+
+    // Hide loading message
+    loadingMessage.style.display = "none"
+
+    // Render categories and products
+    renderCategoryFilters()
+    renderProducts()
+  } catch (error) {
+    console.error("Error fetching products:", error)
+    loadingMessage.style.display = "none"
+    errorMessage.textContent = "Failed to load products. Please try again later."
+    errorMessage.style.display = "block"
+  }
+}
+
+// Render category filter buttons
+function renderCategoryFilters() {
+  categoryFilters.innerHTML = ""
+
+  categories.forEach((category) => {
+    const button = document.createElement("button")
+    button.className = `category-btn ${category === activeCategory ? "active" : ""}`
+    button.textContent = category.charAt(0).toUpperCase() + category.slice(1)
+
+    button.addEventListener("click", () => {
+      activeCategory = category
+
+      // Update active button
+      document.querySelectorAll(".category-btn").forEach((btn) => {
+        btn.classList.remove("active")
       })
-  
-      categoryFilters.addEventListener("click", (e) => {
-        if (e.target.classList.contains("filter-button")) {
-          const category = e.target.dataset.category
-          document.querySelectorAll(".filter-button").forEach((btn) => btn.classList.remove("active"))
-          e.target.classList.add("active")
-  
-          if (category === "all") {
-            renderProducts(products)
-          } else {
-            const filteredProducts = products.filter((product) => product.category === category)
-            renderProducts(filteredProducts)
-          }
-        }
-      })
-    }
+      button.classList.add("active")
+
+      // Re-render products with filter
+      renderProducts()
+    })
+
+    categoryFilters.appendChild(button)
   })
-  
-  
+}
+
+// Render products based on active filter
+function renderProducts() {
+  productsGrid.innerHTML = ""
+
+  const filteredProducts =
+    activeCategory === "all" ? products : products.filter((product) => product.category === activeCategory)
+
+  filteredProducts.forEach((product) => {
+    const productCard = createProductCard(product)
+    productsGrid.appendChild(productCard)
+  })
+}
+
+// Create a product card element
+function createProductCard(product) {
+  const card = document.createElement("div")
+  card.className = "product-card"
+
+  // Generate star rating HTML
+  const rating = product.rating
+  const fullStars = Math.floor(rating)
+  const hasHalfStar = rating % 1 >= 0.5
+
+  let starsHTML = ""
+  for (let i = 0; i < fullStars; i++) {
+    starsHTML += "★"
+  }
+  if (hasHalfStar) {
+    starsHTML += "½"
+  }
+
+  card.innerHTML = `
+        <img src="${product.thumbnail}" alt="${product.title}" class="product-image">
+        <div class="product-content">
+            <h2 class="product-title">${product.title}</h2>
+            <p class="product-price">$${product.price}</p>
+            <div class="product-rating">
+                <span class="stars">${starsHTML}</span>
+                <span>(${product.rating})</span>
+            </div>
+            <div class="product-details">
+                <p class="product-description">${product.description}</p>
+            </div>
+            <button class="toggle-details">Show More</button>
+        </div>
+    `
+
+  // Add event listener for toggle details button
+  const toggleButton = card.querySelector(".toggle-details")
+  const details = card.querySelector(".product-details")
+
+  toggleButton.addEventListener("click", () => {
+    details.classList.toggle("show")
+    toggleButton.textContent = details.classList.contains("show") ? "Show Less" : "Show More"
+  })
+
+  return card
+}
+
+// Initialize the application
+document.addEventListener("DOMContentLoaded", () => {
+  fetchProducts()
+})
+
