@@ -1,0 +1,25 @@
+{
+  "name": "day2-training-arc-18223125",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/millicecup/Day2-Training-ARC-18223125.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/millicecup/Day2-Training-ARC-18223125/issues"
+  },
+  "homepage": "https://github.com/millicecup/Day2-Training-ARC-18223125#readme",
+  "dependencies": {
+    "express": "^4.21.2",
+    "node-fetch": "^3.3.2"
+  }
+}
