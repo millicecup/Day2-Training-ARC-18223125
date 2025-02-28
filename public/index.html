@@ -5,28 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Showcase</title>
     <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Product Showcase</h1>
+    <div class="page-container">
+        <header class="main-header">
+            <div class="header-content">
+                <h1>Product Showcase</h1>
+                <p class="header-subtitle">Discover our collection</p>
+            </div>
         </header>
 
         <section class="filter-section">
-            <h3>Filter by Category:</h3>
-            <div id="category-filters" class="category-filters">
-                <!-- Categories will be added here dynamically -->
+            <div class="filter-container">
+                <h3>Filter by Category</h3>
+                <div id="category-filters" class="category-filters">
+                    <!-- Categories will be added here dynamically -->
+                </div>
             </div>
         </section>
 
-        <div id="loading-message" class="loading-message">Loading products...</div>
+        <div id="loading-message" class="loading-message">
+            <div class="loader"></div>
+            <p>Loading amazing products...</p>
+        </div>
+        
         <div id="error-message" class="error-message"></div>
 
-        <section id="products-grid" class="products-grid">
-            <!-- Products will be added here dynamically -->
+        <section class="products-container">
+            <div id="products-grid" class="products-grid">
+                <!-- Products will be added here dynamically -->
+            </div>
         </section>
     </div>
+
+    <footer class="main-footer">
+        <p>&copy; 2025 Product Showcase. All rights reserved.</p>
+    </footer>
 
     <script src="/script.js"></script>
 </body>
 </html>
+
